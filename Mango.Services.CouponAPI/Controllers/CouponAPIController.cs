@@ -20,6 +20,7 @@ namespace Mango.Services.CouponAPI.Controllers
             _responseDto = new ResponseDto();
             _mapper = mapper;
         }
+        
         [HttpGet]
         public object Get()
         {
