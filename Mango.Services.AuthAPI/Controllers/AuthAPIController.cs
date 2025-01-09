@@ -23,6 +23,7 @@ namespace Mango.Services.AuthAPI.Controllers
         private IMapper _mapper;
         private IConfiguration _configuration;
 
+
         public AuthAPIController(IAuthService authService, IMapper mapper, IConfiguration configuration)
         {
 
@@ -60,6 +61,21 @@ namespace Mango.Services.AuthAPI.Controllers
                 return BadRequest(_responseDto);
             }
             _responseDto.Result = loginresponse;
+            return Ok(_responseDto);
+
+        }
+
+        [HttpPost("AssingRole")]
+        public async Task<IActionResult> AssingRole(RegistrationRequestDto model)
+        {
+
+            bool assignRoleSuccessfully = await _authService.AssignRole(model.Email, model.Role.ToUpper());
+            if (!assignRoleSuccessfully)
+            {
+                _responseDto.IsSuccess = false;
+                _responseDto.Message = "Error encountered";
+                return BadRequest(_responseDto);
+            }
             return Ok(_responseDto);
 
         }
