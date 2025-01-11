@@ -4,7 +4,7 @@ namespace Mango.Web.Service.IService
 {
     public interface IProductService
     {
-        Task<ResponseDto?> GetProductAsync(int productid);
+       
         Task<ResponseDto?> GetAllProductAsync();
         Task<ResponseDto?> GetProductByIdAsync(int id);
         Task<ResponseDto?> CreateProductAsync(ProductDto product);

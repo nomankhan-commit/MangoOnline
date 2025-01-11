@@ -22,7 +22,6 @@ namespace Mango.Services.ProductAPI.Controllers
         }
         
         [HttpGet]
-        [Authorize]
         public object Get()
         {
             try
