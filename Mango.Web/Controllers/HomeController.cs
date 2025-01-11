@@ -1,5 +1,6 @@
 using Mango.Web.Models;
 using Mango.Web.Service.IService;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System.Diagnostics;
@@ -30,6 +31,17 @@ namespace Mango.Web.Controllers
             return View(List);
         }
 
+        [Authorize]
+        public async Task<IActionResult> ProductDetails(int productid)
+        {
+            ProductDto Product = new();
+            ResponseDto? responseDto = await _productService.GetProductByIdAsync(productid);
+            if (responseDto != null && responseDto.IsSuccess)
+            {
+                Product = JsonConvert.DeserializeObject<ProductDto>(Convert.ToString(responseDto.Result));
+            }
+            return View(Product);
+        } 
         public IActionResult Privacy()
         {
             return View();
