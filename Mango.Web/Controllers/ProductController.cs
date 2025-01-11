@@ -109,7 +109,7 @@ namespace Mango.Web.Controllers
             else
             {
                 TempData["error"] = responseDto.Message;
-                return View(model);
+                return View(nameof(Delete),model);
             }
         }
 
