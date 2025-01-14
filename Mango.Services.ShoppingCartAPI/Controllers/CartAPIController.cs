@@ -29,13 +29,15 @@ namespace Mango.Services.ShoppingCartAPI.Controllers
         }
 
         [HttpGet("GetCart/{userId}")]
-        public async Task<ResponseDto> GetCart(string userid)
+        public async Task<ResponseDto> GetCart(string userId)
         {
             try
             {
+               
+
                 CartDto cart = new()
                 {
-                    cartHeader = _mapper.Map<CartHeaderDto>(_db.cartHeaders.FirstOrDefault(x => x.UserId == userid))
+                    cartHeader = _mapper.Map<CartHeaderDto>(_db.cartHeaders.FirstOrDefault(x => x.UserId == userId))
                 };
                 cart.cartDetails = _mapper.Map<IEnumerable<CartDetailsDto>>(_db.
                     cartDetails.Where(x => x.CartHeaderId == cart.cartHeader.CartHeaderId));

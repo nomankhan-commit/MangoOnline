@@ -1,4 +1,4 @@
-﻿using Mango.Web.Model;
+﻿
 using Mango.Web.Models;
 using Mango.Web.Service.IService;
 using Mango.Web.Utility;
@@ -57,7 +57,7 @@ namespace Mango.Web.Service
 
                 ApiType = SD.ApiType.POST,
                 Data = cartDetailsId,
-                url = SD.ShoppingCartApiBase + "/api/cart/RemoveCart/"
+                Url = SD.ShoppingCartApiBase + "/api/cart/RemoveCart/"
 
             });
         }

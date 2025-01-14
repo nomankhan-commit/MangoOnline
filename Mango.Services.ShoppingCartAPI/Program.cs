@@ -17,13 +17,15 @@ builder.Services.AddDbContext<AppDbContext>(option =>
     option.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
 
+
+
 IMapper mapper = MappingConfig.RegisterMaps().CreateMapper();
 builder.Services.AddSingleton(mapper);
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddScoped<IProductService,ProductService>();
 builder.Services.AddScoped<ICouponService,CouponService>();
-builder.Services.AddHttpClient("Product",u=>u.BaseAddress= new Uri(builder.Configuration["ServiceUrls:ProductAPI"]));
-builder.Services.AddHttpClient("Coupon",u=>u.BaseAddress= new Uri(builder.Configuration["ServiceUrls:CouponAPI"]));
+builder.Services.AddHttpClient("Product",u=>u.BaseAddress= new Uri(builder.Configuration["ServiceUrls:ProductAPIBase"]));
+builder.Services.AddHttpClient("Coupon",u=>u.BaseAddress= new Uri(builder.Configuration["ServiceUrls:CouponAPIBase"]));
 builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 //builder.Services.AddOpenApi();
