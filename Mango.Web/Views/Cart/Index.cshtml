@@ -1,5 +1,5 @@
 ﻿@model CartDto
-@if (Model.cartHeader != null && Model.cartDetails?.Count() > 0)
+@if (Model !=null &&  Model.cartHeader != null && Model.cartDetails?.Count() > 0)
 {
     <form method="post" asp-action="EmailCart">
         <input asp-for="cartHeader.UserId" hidden />
