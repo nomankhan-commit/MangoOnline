@@ -62,5 +62,17 @@ namespace Mango.Web.Controllers
             return RedirectToAction(nameof(Index));
 
         }
+
+        public async Task<IActionResult> Remove(int cartDetailId)
+        {
+            //var userid = User.Claims.Where(c => c.Type == JwtRegisteredClaimNames.Sub)?.FirstOrDefault()?.Value;
+            ResponseDto? responseDto = await _cartService.RemoveFromCartAsync(cartDetailId);
+            if (responseDto != null && responseDto.IsSuccess)
+            {
+                TempData["success"] = "Cart updated successfully.";
+            }
+            return RedirectToAction(nameof(Index));
+
+        }
     }
 }
