@@ -1,5 +1,7 @@
 using AutoMapper;
 using Mango.Services.EmailAPI;
+using Mango.Services.EmailAPI.Extension;
+using Mango.Services.EmailAPI.Messaging;
 using Mango.Services.ProductAPI.Data;
 using Microsoft.EntityFrameworkCore;
 
@@ -11,7 +13,7 @@ builder.Services.AddDbContext<AppDbContext>(option =>
 {
     option.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
-
+builder.Services.AddSingleton<IAzureServiceBusConsumer, AzureServiceBusConsumer>();//look
 IMapper mapper = MappingConfig.RegisterMaps().CreateMapper();
 builder.Services.AddSingleton(mapper);
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
@@ -36,6 +38,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
 ApplyMigration();
+app.UserAzureServiceBusConsumer();
 app.Run();
 
 
