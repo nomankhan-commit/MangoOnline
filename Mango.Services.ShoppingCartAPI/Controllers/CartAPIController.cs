@@ -6,6 +6,7 @@ using Mango.Service.ShoppingCart.Data;
 using Microsoft.EntityFrameworkCore;
 using Mango.Services.ShoppingCartAPI.Models.Dto;
 using Mango.Services.ShoppingCartAPI.Service.IService;
+using Mango.MessageBus;
 
 namespace Mango.Services.ShoppingCartAPI.Controllers
 {
@@ -19,13 +20,18 @@ namespace Mango.Services.ShoppingCartAPI.Controllers
         private readonly IConfiguration _configuration;
         private readonly IProductService _productService;
         private readonly ICouponService _couponService;
-        public CartAPIController(AppDbContext db, IMapper mapper, IProductService productService, ICouponService couponService)
+        private readonly IMessageBus _messageBus;
+        public CartAPIController(AppDbContext db, IMapper mapper, IProductService productService, 
+            ICouponService couponService, IMessageBus messageBus, IConfiguration configuration
+            )
         {
             _db = db;
             _responseDto = new ResponseDto();
             _mapper = mapper;
             _productService = productService;
             _couponService = couponService;
+            _messageBus = messageBus;
+            _configuration = configuration;
         }
 
         [HttpGet("GetCart/{userId}")]
@@ -167,6 +173,24 @@ namespace Mango.Services.ShoppingCartAPI.Controllers
                 cartFromDb.CouponCode = cartDto.cartHeader.CouponCode;
                 _db.cartHeaders.Update(cartFromDb);
                 await _db.SaveChangesAsync();
+                _responseDto.Result = true;
+                _responseDto.Sussess = true;
+            }
+            catch (Exception ex)
+            {
+
+                _responseDto.Sussess = false;
+                _responseDto.Message = ex.Message;
+            }
+            return _responseDto;
+        }
+
+        [HttpPost("EmailCartRequest")]
+        public async Task<ResponseDto> EmailCartRequest(CartDto cartDto)
+        {
+            try
+            {
+                await _messageBus.PublishMessage(cartDto, _configuration.GetValue<string>("TopicsAndQueueName:EmailShoppingCart"));
                 _responseDto.Result = true;
                 _responseDto.Sussess = true;
             }
