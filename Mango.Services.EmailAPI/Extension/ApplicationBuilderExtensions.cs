@@ -13,7 +13,7 @@ namespace Mango.Services.EmailAPI.Extension
             azureServiceBusConsumer = app.ApplicationServices.GetService<IAzureServiceBusConsumer>();
             var hostApplicationLife = app.ApplicationServices.GetService<IHostApplicationLifetime>();
             hostApplicationLife.ApplicationStarted.Register(OnStart);
-            hostApplicationLife.ApplicationStarted.Register(OnStop);
+            hostApplicationLife.ApplicationStopping.Register(OnStop);
             return app;
             //look
         }

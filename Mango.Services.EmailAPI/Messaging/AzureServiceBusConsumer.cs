@@ -19,13 +19,14 @@ namespace Mango.Services.EmailAPI.Messaging
 
         public AzureServiceBusConsumer(IConfiguration configuration)
         {
+
+            //_serviceBusOrderConnectionString = _configuration.GetValue<string>("ServiceBusOrderConnectionString");
+            // _orderCreated_Topic = _configuration.GetValue<string>("TopicAndQueueName:OrderCreatedTopic");
+            //_orderCreated_Email_Subscription = _configuration.GetValue<string>("TopicAndQueueName:OrderCreated_Reward_Subscription");
+           
             _configuration = configuration;
             _serviceBusConnectionString = _configuration.GetValue<string>("ServiceBusConnectionString");
-            //_serviceBusOrderConnectionString = _configuration.GetValue<string>("ServiceBusOrderConnectionString");
-            _emailCartQueue = _configuration.GetValue<string>("TopicAndQueueName:EmailShoppingCart");
-           // _orderCreated_Topic = _configuration.GetValue<string>("TopicAndQueueName:OrderCreatedTopic");
-            //_orderCreated_Email_Subscription = _configuration.GetValue<string>("TopicAndQueueName:OrderCreated_Reward_Subscription");
-
+            _emailCartQueue = _configuration.GetValue<string>("TopicsAndQueueName:EmailShoppingCartQueue");
             var client = new ServiceBusClient(_serviceBusConnectionString);
             _emailCartProcessor = client.CreateProcessor(_emailCartQueue);
             
