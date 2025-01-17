@@ -54,9 +54,10 @@ namespace Mango.Services.EmailAPI.Services
                 return false;
             }
         }
-        public Task RegisterUserEmailandLog(string email)
+        public async Task RegisterUserEmailandLog(string email)
         {
-            throw new NotImplementedException();
+            string message = "User Registeration Successfull. </br> Email: " + email;
+            await LogAndEmail(message, "todo: admin email  here.");
         }
     }
 }
