@@ -1,5 +1,6 @@
 ﻿using Azure.Messaging.ServiceBus;
 using Mango.Services.EmailAPI.Models.Dto;
+using Mango.Services.EmailAPI.Services;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
@@ -15,15 +16,19 @@ namespace Mango.Services.EmailAPI.Messaging
         private readonly string _registerUserQueue;
         private readonly IConfiguration _configuration;
 
+        // look why removed IEmailService interface : vid 115
+        //private readonly IEmailService _emailService;
+        private readonly EmailService _emailService;
         private ServiceBusProcessor _emailCartProcessor;
 
-        public AzureServiceBusConsumer(IConfiguration configuration)
+        public AzureServiceBusConsumer(IConfiguration configuration, EmailService emailService)
         {
 
             //_serviceBusOrderConnectionString = _configuration.GetValue<string>("ServiceBusOrderConnectionString");
             // _orderCreated_Topic = _configuration.GetValue<string>("TopicAndQueueName:OrderCreatedTopic");
             //_orderCreated_Email_Subscription = _configuration.GetValue<string>("TopicAndQueueName:OrderCreated_Reward_Subscription");
            
+            _emailService = emailService;
             _configuration = configuration;
             _serviceBusConnectionString = _configuration.GetValue<string>("ServiceBusConnectionString");
             _emailCartQueue = _configuration.GetValue<string>("TopicsAndQueueName:EmailShoppingCartQueue");
@@ -51,7 +56,7 @@ namespace Mango.Services.EmailAPI.Messaging
             CartDto cartDto = JsonConvert.DeserializeObject<CartDto>(body);
             try
             {
-                //await _emailService.EmailCartLog(cartDto);
+                await _emailService.EmailCartLog(cartDto);
                 args.CompleteMessageAsync(args.Message);
             }
             catch (Exception ex)

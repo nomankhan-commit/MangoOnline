@@ -1,8 +1,9 @@
 using AutoMapper;
 using Mango.Services.EmailAPI;
+using Mango.Services.EmailAPI.Data;
 using Mango.Services.EmailAPI.Extension;
 using Mango.Services.EmailAPI.Messaging;
-using Mango.Services.ProductAPI.Data;
+using Mango.Services.EmailAPI.Services;
 using Microsoft.EntityFrameworkCore;
 
 
@@ -13,6 +14,13 @@ builder.Services.AddDbContext<AppDbContext>(option =>
 {
     option.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
+
+//look : vid 115
+var optionsBuilder = new DbContextOptionsBuilder<AppDbContext>();
+optionsBuilder.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+builder.Services.AddSingleton(new EmailService(optionsBuilder.Options));
+
+
 builder.Services.AddSingleton<IAzureServiceBusConsumer, AzureServiceBusConsumer>();//look
 builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
