@@ -75,6 +75,12 @@ namespace Mango.Web.Controllers
 
         }
 
+        [Authorize]
+        public async Task<IActionResult> Checkout() {
+
+
+            return View();
+        }
 
         [HttpPost]
         public async Task<IActionResult> EmailCart(CartDto cartDto)
