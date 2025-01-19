@@ -78,8 +78,8 @@ namespace Mango.Web.Controllers
         [Authorize]
         public async Task<IActionResult> Checkout() {
 
-
-            return View();
+            CartDto cart = await LoadCartDtoBasedonLoggedInUser();
+            return View(cart);
         }
 
         [HttpPost]
