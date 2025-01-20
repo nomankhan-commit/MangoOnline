@@ -44,13 +44,13 @@ namespace Mango.Services.OrderAPI.Controllers
                 IEnumerable<OrderHeader> objlist;
                 if (User.IsInRole(SD.RoleAdmin))
                 {
-                    objlist = _appDbContext.OrderHeaders
+                    objlist = _db.OrderHeaders
                         .Include(x => x.OrderDetails)
                         .OrderByDescending(x => x.OrderHeaderId).ToList();
                 }
                 else
                 {
-                    objlist = _appDbContext.OrderHeaders
+                    objlist = _db.OrderHeaders
                         .Include(x => x.OrderDetails)
                         .Where(x => x.UserId == userid)
                         .OrderByDescending(x => x.OrderHeaderId).ToList();
@@ -72,7 +72,7 @@ namespace Mango.Services.OrderAPI.Controllers
         {
             try
             {
-                OrderHeader orderHeader = _appDbContext.OrderHeaders.Include(x => x.OrderDetails).First(x => x.OrderHeaderId == OrderHeaderId);
+                OrderHeader orderHeader = _db.OrderHeaders.Include(x => x.OrderDetails).First(x => x.OrderHeaderId == OrderHeaderId);
                 _response.Result = _mapper.Map<OrderHeaderDto>(orderHeader);
                 _response.IsSuccess = true;
             }
@@ -92,7 +92,7 @@ namespace Mango.Services.OrderAPI.Controllers
         {
             try
             {
-                OrderHeader orderHeader = _appDbContext.OrderHeaders.First(x => x.OrderHeaderId == orderid);
+                OrderHeader orderHeader = _db.OrderHeaders.First(x => x.OrderHeaderId == orderid);
                 if (orderHeader == null)
                 {
 
@@ -102,7 +102,7 @@ namespace Mango.Services.OrderAPI.Controllers
 
                     }
                     orderHeader.Status = newStatus;
-                    _appDbContext.SaveChanges();
+                    _db.SaveChanges();
                 }
 
                 _response.Result = _mapper.Map<OrderHeaderDto>(orderHeader);
