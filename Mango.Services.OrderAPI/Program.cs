@@ -10,7 +10,6 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using Stripe;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -98,7 +97,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-StripeConfiguration.ApiKey = "sk_test_51QldtIGb2C4QD1yW3lZ37OYo41WwzhCMYxAhObBncAPgH7yX9vlWXGvqE3VIg7NmHKmskTzl4wAeoldGmAKqon5Y00835fsGr6";
+Stripe.StripeConfiguration.ApiKey = "sk_test_51QldtIGb2C4QD1yW3lZ37OYo41WwzhCMYxAhObBncAPgH7yX9vlWXGvqE3VIg7NmHKmskTzl4wAeoldGmAKqon5Y00835fsGr6";
 app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
