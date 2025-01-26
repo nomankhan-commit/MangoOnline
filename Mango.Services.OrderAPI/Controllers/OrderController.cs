@@ -8,6 +8,10 @@ using Mango.Services.OrderAPI.Data;
 using Mango.Services.OrderAPI.Service.IService;
 using Mango.Services.OrderAPI.Utility;
 using Microsoft.EntityFrameworkCore;
+using Stripe;
+using Mango.Web.Models;
+using System.Runtime.CompilerServices;
+using Stripe.Checkout;
 
 namespace Mango.Services.OrderAPI.Controllers
 {
@@ -141,6 +145,57 @@ namespace Mango.Services.OrderAPI.Controllers
             catch (Exception ex)
             {
                 _response.Result = ex.Message;
+                _response.IsSuccess = false;
+            }
+            return _response;
+        }
+
+        [Authorize]
+        [HttpPost("CreateStripeSession")]
+        public async Task<ResponseDto> CreateStripeSession([FromBody] StripeRequestDto stripeRequestDto) {
+
+            try
+            {
+                
+
+                var options = new Stripe.Checkout.SessionCreateOptions
+                {
+                    SuccessUrl = stripeRequestDto.ApprovedUrl,
+                    CancelUrl = stripeRequestDto.CancelUrl,
+                    LineItems = new List<Stripe.Checkout.SessionLineItemOptions>(),
+                    Mode = "payment",
+                };
+
+                foreach (var item in stripeRequestDto.OrderHeader.OrderDetails)
+                {
+                    var sessionLineItem = new SessionLineItemOptions
+                    {
+                        PriceData = new SessionLineItemPriceDataOptions
+                        {
+                            UnitAmount = (long)(item.ProductPrice * 100),
+                            Currency = "usd",
+                            ProductData = new SessionLineItemPriceDataProductDataOptions
+                            {
+                                Name = item.ProductDto.ProductName,
+                            }
+
+                        },
+                        Quantity = item.Count
+                    };
+                    options.LineItems.Add(sessionLineItem);
+                }
+
+                var service = new Stripe.Checkout.SessionService();
+                Session session = service.Create(options);
+                stripeRequestDto.StripeSessionUrl = session.Url;
+                OrderHeader orderHeader = _db.OrderHeaders.First(u => u.OrderHeaderId == stripeRequestDto.OrderHeader.OrderHeaderId);
+                orderHeader.StripSessionId = session.Id;
+                _db.SaveChanges();
+                _response.Result = stripeRequestDto;
+            }
+            catch (Exception ex)
+            {
+                _response.Message = ex.Message; 
                 _response.IsSuccess = false;
             }
             return _response;
