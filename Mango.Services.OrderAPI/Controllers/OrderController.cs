@@ -166,6 +166,14 @@ namespace Mango.Services.OrderAPI.Controllers
                     Mode = "payment",
                 };
 
+                var discountsObj = new List<SessionDiscountOptions>()
+                {
+                    new SessionDiscountOptions 
+                    {
+                        Coupon = stripeRequestDto.OrderHeader.CouponCode
+                    }
+                };
+
                 foreach (var item in stripeRequestDto.OrderHeader.OrderDetails)
                 {
                     var sessionLineItem = new SessionLineItemOptions
@@ -185,6 +193,10 @@ namespace Mango.Services.OrderAPI.Controllers
                     options.LineItems.Add(sessionLineItem);
                 }
 
+                if (stripeRequestDto.OrderHeader.Discount > 0)
+                {
+                    options.Discounts = discountsObj;
+                }
                 var service = new Stripe.Checkout.SessionService();
                 Session session = service.Create(options);
                 stripeRequestDto.StripeSessionUrl = session.Url;
@@ -196,6 +208,38 @@ namespace Mango.Services.OrderAPI.Controllers
             catch (Exception ex)
             {
                 _response.Message = ex.Message; 
+                _response.IsSuccess = false;
+            }
+            return _response;
+        }
+
+        [Authorize]
+        [HttpPost("CreateStripeSession")]
+        public async Task<ResponseDto> CreateStripeSession([FromBody] int orderHeaderId)
+        {
+
+            try
+            {
+
+                OrderHeader orderHeader = _db.OrderHeaders.First(u=>u.OrderHeaderId == orderHeaderId);
+                var service = new Stripe.Checkout.SessionService();
+                Session session = service.Get(orderHeader.StripSessionId);
+
+                var paymentIntentService = new PaymentIntentService();
+                PaymentIntent paymentIntent = paymentIntentService.Get(session.PaymentIntentId);
+                if (paymentIntent.Status == "succeeded")
+                {
+                    orderHeader.PaymentIntentId = paymentIntent.Id;
+                    orderHeader.Status = SD.Status_Approved;
+                    _db.SaveChanges();
+                    _response.Result = _mapper.Map<OrderHeaderDto>(orderHeader);
+                }
+
+             
+            }
+            catch (Exception ex)
+            {
+                _response.Message = ex.Message;
                 _response.IsSuccess = false;
             }
             return _response;
