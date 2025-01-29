@@ -122,8 +122,8 @@ namespace Mango.Web.Controllers
             {
                 StripeRequestDto stripeRequestDto = new StripeRequestDto()
                 {
-                    ApprovedUrl = domain + "/cart/confirmation?orderId="+orderHeaderDto.OrderHeaderId,
-                    CancelUrl = domain + "cart/checkout",
+                    ApprovedUrl = domain + "Cart/confirmation?orderId="+orderHeaderDto.OrderHeaderId,
+                    CancelUrl = domain + "Cart/checkout",
                     OrderHeader = orderHeaderDto,   
                 };
             var stripeResponse = await _orderService.CreateStripeSession(stripeRequestDto);
