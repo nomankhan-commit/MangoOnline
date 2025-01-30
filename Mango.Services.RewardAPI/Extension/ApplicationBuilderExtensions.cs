@@ -1,6 +1,8 @@
-﻿using Mango.Services.EmailAPI.Messaging;
+﻿
+using Mango.Services.RewardAPI.Messaging;
+using System.Runtime.CompilerServices;
 
-namespace Mango.Services.EmailAPI.Extension
+namespace Mango.Services.RewardAPI.Extension
 {
     public static class ApplicationBuilderExtensions
     {
