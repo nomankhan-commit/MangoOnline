@@ -11,6 +11,7 @@ namespace Mango.Web.Service.IService
         Task<ResponseDto?> UpdateOrderStatus(int orderid, string newStatus);
         Task<ResponseDto?> GetAllOrders(string? userid);
         Task<ResponseDto?> GetOrder(string? orderid);
+        Task<ResponseDto?> GetOrder(int orderid);
 
     }
 }

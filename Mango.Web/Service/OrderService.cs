@@ -61,6 +61,16 @@ namespace Mango.Web.Service
 
             });
         }
+        public async Task<ResponseDto?> GetOrder(int orderid)
+        {
+            return await _baseService.SendAsync(new RequestDto()
+            {
+
+                ApiType = SD.ApiType.GET,
+                Url = SD.OrderApiBase + "/api/Order/GetOrder/" + orderid
+
+            });
+        }
 
         public async Task<ResponseDto?> UpdateOrderStatus(int orderid, string newStatus)
         {
