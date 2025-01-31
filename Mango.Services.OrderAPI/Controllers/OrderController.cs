@@ -89,39 +89,6 @@ namespace Mango.Services.OrderAPI.Controllers
             return _response;
         }
 
-
-        [Authorize]
-        [HttpPost("UpdateOrderStatus/{orderid:int}")]
-        public ResponseDto? UpdateOrderStatus(int orderid, [FromBody] string newStatus)
-        {
-            try
-            {
-                OrderHeader orderHeader = _db.OrderHeaders.First(x => x.OrderHeaderId == orderid);
-                if (orderHeader == null)
-                {
-
-
-                    if (newStatus == SD.Status_Cancelled)
-                    {
-
-                    }
-                    orderHeader.Status = newStatus;
-                    _db.SaveChanges();
-                }
-
-                _response.Result = _mapper.Map<OrderHeaderDto>(orderHeader);
-                _response.IsSuccess = true;
-            }
-            catch (Exception ex)
-            {
-                _response.IsSuccess = false;
-                _response.Message = ex.Message;
-
-            }
-            return _response;
-        }
-
-
         [Authorize]
         [HttpPost("CreateOrder")]
         public async Task<ResponseDto> CreateOrder([FromBody] CartDto cartDto)
@@ -245,6 +212,37 @@ namespace Mango.Services.OrderAPI.Controllers
                 }
 
              
+            }
+            catch (Exception ex)
+            {
+                _response.Message = ex.Message;
+                _response.IsSuccess = false;
+            }
+            return _response;
+        }
+
+
+        [Authorize]
+        [HttpPost("UpdateOrderStatus/{orderId:int}")]
+        public async Task<ResponseDto> UpdateOrderStatus(int orderId, [FromBody] string newStatus)
+        {
+
+            try
+            {
+                OrderHeader orderHeader = _db.OrderHeaders.First(u=>u.OrderHeaderId == orderId);
+                if (orderHeader != null) {
+                    if (newStatus == SD.Status_Cancelled)
+                    {
+                        var options = new RefundCreateOptions { 
+                            Reason = RefundReasons.RequestedByCustomer,
+                            PaymentIntent = orderHeader.PaymentIntentId
+                        };
+                        var service = new RefundService();
+                        Refund refund = service.Create(options);
+                    }
+                     orderHeader.Status = newStatus;
+                    _db.SaveChanges();
+                }
             }
             catch (Exception ex)
             {
