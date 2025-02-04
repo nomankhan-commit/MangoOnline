@@ -9,6 +9,7 @@ $(document).ready(function () {
 function loadDataTable() {
 
     dataTable = $('#datatable').dataTable({
+        order:[[0,"desc"]],
         "ajax": { url: "/order/getall" },
         "columns": [
             { "data": "orderHeaderId", "width": "5%" },
