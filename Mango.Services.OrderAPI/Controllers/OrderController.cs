@@ -71,7 +71,7 @@ namespace Mango.Services.OrderAPI.Controllers
         }
 
         [Authorize]
-        [HttpGet("GetOrder/{id:int}")]
+        [HttpGet("GetOrder/{OrderHeaderId:int}")]
         public ResponseDto? Get(int OrderHeaderId)
         {
             try
