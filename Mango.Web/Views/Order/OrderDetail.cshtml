@@ -103,9 +103,21 @@
                                     </div>
                                 </li>
                             </ul>
-
-                            <button type="submit" class="btn btn-success form-control my-1">Ready for Pickup</button>
-                            <button type="submit" class="btn btn-danger form-control my-1">Cancel Order</button>
+                            @if (User.IsInRole(Mango.Web.Utility.SD.RoleAdmin)) {
+                                if (Model.Status == Mango.Web.Utility.SD.Status_Approved)
+                                {
+                                    <button type="submit" asp-action="OrderReadyForPickup" asp-route-orderId="@Model.OrderHeaderId" class="btn btn-success form-control my-1">Ready for Pickup</button>
+                                }
+                                if (Model.Status == Mango.Web.Utility.SD.Status_ReadyForPickup)
+                                {
+                                    <button type="submit" asp-action="CompleteOrder"  asp-route-orderId="@Model.OrderHeaderId" class="btn btn-danger form-control my-1">Complete Order</button>
+                                }
+                                if (Model.Status == Mango.Web.Utility.SD.Status_Approved || Model.Status == Mango.Web.Utility.SD.Status_ReadyForPickup)
+                                {
+                                    <button type="submit" asp-action="CancelOrder" asp-route-orderId="@Model.OrderHeaderId" class="btn btn-danger form-control my-1">Cancel Order</button>
+                                }  
+                            }
+                          
                         </div>
                     </div>
                 </div>
