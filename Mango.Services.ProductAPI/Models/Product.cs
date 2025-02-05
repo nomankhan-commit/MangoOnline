@@ -15,5 +15,6 @@ namespace Mango.Services.ProductAPI.Models
         public string CategoryName { get; set; }
         [Required]
         public string ImageUrl { get; set; }
+        public string ImageLocalPath { get; set; }
     }
 }
