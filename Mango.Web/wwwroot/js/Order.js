@@ -1,16 +1,32 @@
 ﻿
 $(document).ready(function () {
 
-    loadDataTable();
+    var url = window.location.search.toLowerCase();
+    if (url.indexOf("approved") > -1)
+    {
+        loadDataTable("Approved");
+    }
+    if (url.indexOf("ready") > -1)
+    {
+        loadDataTable("ReadyForPickup");
+    }
+    if (url.indexOf("cancelled") > -1)
+    {
+        loadDataTable("Cancelled");
+    }
+    else {
+        loadDataTable("all");
+    }
+    
 
 })
 
 
-function loadDataTable() {
+function loadDataTable(status) {
 
     dataTable = $('#datatable').dataTable({
         order:[[0,"desc"]],
-        "ajax": { url: "/order/getall" },
+        "ajax": { url: "/order/getall?status=" + status},
         "columns": [
             { "data": "orderHeaderId", "width": "5%" },
             { "data": "email", "width": "25%" },

@@ -1,4 +1,33 @@
-﻿@*  @model IEnumerable<Mango.web.Model.Dto.OrderHeaderDto>; *@
+﻿@{
+    var status = Context.Request.Query["status"];
+    var approved = "";
+    var readyforpickup = "";
+    var cancelled = "";
+    var all = "";
+
+    const string _approved = @Mango.Web.Utility.SD.Status_Approved;
+    const string _readyForPickup = @Mango.Web.Utility.SD.Status_ReadyForPickup;
+    const string _cancelled = @Mango.Web.Utility.SD.Status_Cancelled;
+
+    switch(status){
+
+        case _approved:
+            approved = "active text-white bg-secondary";
+            break;
+        case _readyForPickup:
+            readyforpickup = "active text-white bg-secondary";
+            break;
+        case _cancelled:
+            cancelled = "active text-white bg-secondary";
+            break;
+        default:
+            all = "active text-white bg-secondary";
+            break;
+    }
+
+   }
+
+
 
 <div class="card shadow border-0 mt-4">
 
@@ -6,6 +35,12 @@
         <div class="row">
             <h1 class="text-white">Order List</h1>
         </div>
+        <ul class="list-group list-group-horizontal-sm pt-2">
+              <li class="list-group-item @approved"> <a href="/order/index?status=@Mango.Web.Utility.SD.Status_Approved" style="text-decoration:none">Approved</a> </li>
+            <li class="list-group-item @readyforpickup"> <a href="/order/index?status=@Mango.Web.Utility.SD.Status_ReadyForPickup" style="text-decoration:none">Ready For Pickup</a> </li>
+            <li class="list-group-item @cancelled"> <a href="/order/index?status=@Mango.Web.Utility.SD.Status_Cancelled" style="text-decoration:none">Cancelled</a> </li>
+            <li class="list-group-item @all"> <a href="/order/index?status=All" style="text-decoration:none">All</a> </li>
+        </ul>
     </div>
     <div class="card-body p-4">
         <table id="datatable" class="table table-bordered table-striped pt-3" style="width:100%">
