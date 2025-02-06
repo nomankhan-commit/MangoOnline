@@ -78,7 +78,7 @@ namespace Mango.Services.ProductAPI.Controllers
                         productDto.Image.CopyTo(fileStream);
                     }
                     var baseUrl = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host.Value}{HttpContext.Request.PathBase.Value}";
-                    product.ImageUrl = baseUrl + "/"+filePath;
+                    product.ImageUrl = baseUrl + "/"+ filename;
                     product.ImageLocalPath = filePath;
                 }
                 else
@@ -126,10 +126,22 @@ namespace Mango.Services.ProductAPI.Controllers
 
             try
             {
-                Product coupon = _db.Products.First(x => x.ProductId == id);
-                _db.Remove(coupon);
+                Product product = _db.Products.First(x => x.ProductId == id);
+
+                if (string.IsNullOrEmpty(product.ImageLocalPath))
+                {
+                    var oldFilePathDirectory = Path.Combine(Directory.GetCurrentDirectory(),product.ImageLocalPath);
+                    FileInfo file = new FileInfo(oldFilePathDirectory);
+                    if (file.Exists)
+                    {
+                        file.Delete();
+                    }
+                }
+
+
+                _db.Remove(product);
                 _db.SaveChanges();
-                _responseDto.Result = _mapper.Map<ProductDto>(coupon);
+                _responseDto.Result = _mapper.Map<ProductDto>(product);
             }
             catch (Exception ex)
             {
