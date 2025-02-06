@@ -60,7 +60,7 @@ namespace Mango.Services.ProductAPI.Controllers
 
         [HttpPost]
         [Authorize(Roles = "ADMIN")]
-        public object Post([FromBody] ProductDto productDto)
+        public object Post(ProductDto productDto)
         {
 
             try
@@ -78,7 +78,7 @@ namespace Mango.Services.ProductAPI.Controllers
                         productDto.Image.CopyTo(fileStream);
                     }
                     var baseUrl = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host.Value}{HttpContext.Request.PathBase.Value}";
-                    product.ImageUrl = baseUrl + "/ProductImages/"+filePath;
+                    product.ImageUrl = baseUrl + "/"+filePath;
                     product.ImageLocalPath = filePath;
                 }
                 else
@@ -100,7 +100,7 @@ namespace Mango.Services.ProductAPI.Controllers
 
         [HttpPut]
         [Authorize(Roles = "ADMIN")]
-        public object Put([FromBody] ProductDto ProductDto)
+        public object Put(ProductDto ProductDto)
         {
 
             try

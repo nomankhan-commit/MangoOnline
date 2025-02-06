@@ -1,5 +1,6 @@
 ﻿using Mango.Web.Models;
 using Mango.Web.Service.IService;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 
@@ -76,7 +77,7 @@ namespace Mango.Web.Controllers
                 }
             }
 
-            return View(model);
+            return View(nameof(Create), model);
         }
         [HttpPost]
         public async Task<IActionResult> ProductEdit(ProductDto model)
