@@ -15,7 +15,7 @@ namespace Mango.Web.Utility
             if (file != null)
             {
                 var extension = Path.GetExtension(file.FileName);
-                if (_allowedExtensions.Contains(extension.ToLower()))
+                if (!_allowedExtensions.Contains(extension.ToLower()))
                 {
                     return new ValidationResult("this photo extension is not allowed.");
                 }

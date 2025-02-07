@@ -78,7 +78,7 @@ namespace Mango.Services.ProductAPI.Controllers
                         productDto.Image.CopyTo(fileStream);
                     }
                     var baseUrl = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host.Value}{HttpContext.Request.PathBase.Value}";
-                    product.ImageUrl = baseUrl + "/"+ filename;
+                    product.ImageUrl = baseUrl + "/ProductImages/" + filename;
                     product.ImageLocalPath = filePath;
                 }
                 else
