@@ -4,8 +4,9 @@ using Ocelot.Values;
 
 
 var builder = WebApplication.CreateBuilder(args);
-var app = builder.Build();
 builder.Services.AddOcelot();
+var app = builder.Build();
+
 
 app.MapGet("/", () => "Hello World!");
 app.UseOcelot();
