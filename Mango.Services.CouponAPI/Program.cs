@@ -58,10 +58,19 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    //app.MapOpenApi();
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+else
+{
+    app.UseSwagger();
+    app.UseSwaggerUI(x =>
+    {
+        x.SwaggerEndpoint("/swagger/v1/swagger.json", "COUPON API");
+        x.RoutePrefix = string.Empty;
+    });
+}
+
 Stripe.StripeConfiguration.ApiKey = "sk_test_51QldtIGb2C4QD1yW3lZ37OYo41WwzhCMYxAhObBncAPgH7yX9vlWXGvqE3VIg7NmHKmskTzl4wAeoldGmAKqon5Y00835fsGr6";
 app.UseHttpsRedirection();
 app.UseAuthentication();

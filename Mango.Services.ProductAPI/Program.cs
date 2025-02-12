@@ -76,9 +76,17 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    //app.MapOpenApi();
     app.UseSwagger();
     app.UseSwaggerUI();
+}
+else
+{
+    app.UseSwagger();
+    app.UseSwaggerUI(x =>
+    {
+        x.SwaggerEndpoint("/swagger/v1/swagger.json", "PRODUCT API");
+        x.RoutePrefix = string.Empty;
+    });
 }
 
 app.UseHttpsRedirection();

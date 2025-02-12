@@ -32,6 +32,15 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+else
+{
+    app.UseSwagger();
+    app.UseSwaggerUI(x =>
+    {
+        x.SwaggerEndpoint("/swagger/v1/swagger.json", "REWARD API");
+        x.RoutePrefix = string.Empty;
+    });
+}
 
 app.UseHttpsRedirection();
 
