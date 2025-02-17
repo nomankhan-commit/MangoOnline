@@ -10,8 +10,8 @@ using Mango.Services.OrderAPI.Utility;
 using Microsoft.EntityFrameworkCore;
 using Stripe;
 using Mango.Web.Models;
-using System.Runtime.CompilerServices;
 using Stripe.Checkout;
+using Mango.Services.OrderAPI.RabbitMQSender;
 
 namespace Mango.Services.OrderAPI.Controllers
 {
@@ -25,11 +25,12 @@ namespace Mango.Services.OrderAPI.Controllers
         private IMapper _mapper;
         private readonly AppDbContext _db;
         private IProductService _productService;
-        private IMessageBus _messageBus;
+        private IRabbitMQOrderMessageSender _messageBus;
+        //private IMessageBus _messageBus;
         private IConfiguration _configuration;
         public OrderController(AppDbContext appDbContext,
             IProductService productService, IMapper mapper,
-            IMessageBus messageBus, IConfiguration configuration)
+            IRabbitMQOrderMessageSender messageBus, IConfiguration configuration)
         {
             _mapper = mapper;
             _db = appDbContext;
@@ -201,13 +202,12 @@ namespace Mango.Services.OrderAPI.Controllers
                     _db.SaveChanges();
                     RewardsDto rewardsDto = new()
                     {
-
                         OrderId = orderHeaderId,
                         RewardsActivity = Convert.ToInt32(orderHeader.OrderTotal),
                         UserId =  orderHeader.UserId
                     };
                     string topicname = _configuration.GetValue<string>("TopicsAndQueueName:OrderCreatedTopic");
-                    await _messageBus.PublishMessage(rewardsDto,topicname);
+                    _messageBus.SendMessage(rewardsDto,topicname);
                     _response.Result = _mapper.Map<OrderHeaderDto>(orderHeader);
                 }
 
