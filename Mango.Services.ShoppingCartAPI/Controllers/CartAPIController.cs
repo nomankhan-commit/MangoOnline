@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Mango.Services.ShoppingCartAPI.Models.Dto;
 using Mango.Services.ShoppingCartAPI.Service.IService;
 using Mango.MessageBus;
+using Mango.Services.ShoppingCartAPI.RabbitMQSender;
 
 namespace Mango.Services.ShoppingCartAPI.Controllers
 {
@@ -20,9 +21,10 @@ namespace Mango.Services.ShoppingCartAPI.Controllers
         private readonly IConfiguration _configuration;
         private readonly IProductService _productService;
         private readonly ICouponService _couponService;
-        private readonly IMessageBus _messageBus;
+        //private readonly IMessageBus _messageBus;
+        private readonly IRabbitMQAuthMessageSender _messageBus;
         public CartAPIController(AppDbContext db, IMapper mapper, IProductService productService, 
-            ICouponService couponService, IMessageBus messageBus, IConfiguration configuration
+            ICouponService couponService, IRabbitMQAuthMessageSender messageBus, IConfiguration configuration
             )
         {
             _db = db;
@@ -190,7 +192,7 @@ namespace Mango.Services.ShoppingCartAPI.Controllers
         {
             try
             {
-                await _messageBus.PublishMessage(cartDto, _configuration.GetValue<string>("TopicsAndQueueName:EmailShoppingCartQueue"));
+                 _messageBus.SendMessage(cartDto, _configuration.GetValue<string>("TopicsAndQueueName:EmailShoppingCartQueue"));
                 _responseDto.Result = true;
                 _responseDto.Sussess = true;
             }

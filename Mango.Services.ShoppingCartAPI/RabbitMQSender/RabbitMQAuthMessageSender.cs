@@ -2,7 +2,7 @@
 using RabbitMQ.Client;
 using System.Text;
 
-namespace Mango.Services.AuthAPI.RabbitMQSender
+namespace Mango.Services.ShoppingCartAPI.RabbitMQSender
 {
     public class RabbitMQAuthMessageSender : IRabbitMQAuthMessageSender
     {
@@ -29,7 +29,7 @@ namespace Mango.Services.AuthAPI.RabbitMQSender
             }
         }
 
-       async private void  CreateConnection()
+        private void  CreateConnection()
         {
             try
             {
@@ -39,7 +39,7 @@ namespace Mango.Services.AuthAPI.RabbitMQSender
                     UserName = _userName,
                     Password = _password,
                 };
-                _connection = await factory.CreateConnectionAsync();
+                _connection =  factory.CreateConnectionAsync().GetAwaiter().GetResult();
             }
             catch (Exception ex)
             {
