@@ -18,7 +18,7 @@ builder.Services.AddDbContext<AppDbContext>(option =>
 var optionsBuilder = new DbContextOptionsBuilder<AppDbContext>();
 optionsBuilder.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 builder.Services.AddSingleton(new EmailService(optionsBuilder.Options));
-
+builder.Services.AddHostedService<RabbitMQAuthConsumer>();
 
 builder.Services.AddSingleton<IAzureServiceBusConsumer, AzureServiceBusConsumer>();//look
 builder.Services.AddControllers();

@@ -20,17 +20,48 @@ namespace Mango.Services.AuthAPI.RabbitMQSender
         async void IRabbitMQAuthMessageSender.SendMessage(object message, string queueName)
         {
 
-            var factory = new ConnectionFactory { 
-                HostName = _hostName,
-                UserName = _userName,
-                Password = _password,
-            };
-            _connection = await factory.CreateConnectionAsync();
-            using var channel = await _connection.CreateChannelAsync();
-            await channel.QueueDeclareAsync(queueName,false,false,false,null);
-            var json = JsonConvert.SerializeObject(message);
-            var body = Encoding.UTF8.GetBytes(json);
-            await channel.BasicPublishAsync(exchange:"",routingKey:queueName, body:body);
+            if (ConnectionExists())
+            {
+                using var channel = await _connection.CreateChannelAsync();
+                await channel.QueueDeclareAsync(queueName, false, false, false, null);
+                var json = JsonConvert.SerializeObject(message);
+                var body = Encoding.UTF8.GetBytes(json);
+                await channel.BasicPublishAsync(exchange: "", routingKey: queueName, body: body);
+            }
+           
         }
+
+       async private void  CreateConnection()
+        {
+            try
+            {
+                var factory = new ConnectionFactory
+                {
+                    HostName = _hostName,
+                    UserName = _userName,
+                    Password = _password,
+                };
+                _connection = await factory.CreateConnectionAsync();
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
+        }
+
+         private bool ConnectionExists()
+        {
+                if (_connection==null)
+                {
+                    return true;
+                }
+                else
+                {
+                    CreateConnection();
+                    return true;
+                }
+        }
+
     }
 }
